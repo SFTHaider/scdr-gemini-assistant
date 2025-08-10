@@ -1,0 +1,376 @@
+NAME
+    scdr-files-go - Easily locate files stored in the STAR Central Data Repository
+
+
+SYNOPSIS
+    scdr-files-go [OPTION...] DATE...
+
+
+DESCRIPTION
+        scdr-files-go is a command-line program for locating files stored in the STAR Central Data Repository (SCDR). It is designed as a typical UNIX utility -- to perform a specific task reliably and fast. Files which satisfy the search conditions are printed to stdout with full NFS paths, one per line, sorted by file’s data start time. Any warning or error message is printed on stderr.
+
+
+        Typical usage would consist of invoking scdr-files with search criteria (see "OPTIONS" and "EXAMPLES"), then reading stdout and checking the program’s exit status. Users who cannot pipe stdout into their software can redirect it to a temporary file and then read it in. A non-zero exit status indicates that no output should be expected either due to an execution error or no files found.
+
+
+OPTIONS
+    --available [COLLECTION]
+        Prints a summary report about what data is available in SCDR.  When used without an argument it provides high-level information about every data collection in the repository. When a COLLECTION is given a more detailed report about it is generated. The collection name can either be in uppercase or lowercase.
+
+
+        This option takes precedence in execution. The program will disregard all other options present beside --gap, --start-time, and --end-time.
+
+
+    --gap [INTERVAL]
+        Defines the time interval for reporting data gaps. Any data time gap larger than INTERVAL will be reported. This option is only meaningful when combined with either the --available or --type options. It is silently ignored in all other cases.
+
+
+        The syntax for INTERVAL values is:
+
+
+            "quantity unit [quantity unit...]"
+
+
+        where quantity is a positive number and unit is one of "microsecond", "millisecond", "second", "minute", "hour", "day", "month", or "year". Plurals of unit values are also allowed. Default value is "1 day".
+
+
+    -t, --type COLLECTION
+        Search only for files of the specified data collection. Using this option is highly recommended for any kind of file searches. Collection names can either be in uppercase or lowercase.
+
+
+    -f, --file FILENAME
+        Locate files with exact FILENAME.
+
+
+    --sha1 CHECKSUM
+        Locate files whose content’s SHA-1 value is CHECKSUM.
+
+
+    --re-file REGEX
+        Locate files whose names match the case-insensitive regular expression REGEX.  Only one regular expression is allowed, not longer than 100 characters. This option can only be combined with the --type option as it will significantly speed up the execution; everything else on the command line will be disregarded.
+
+
+         REGEX can be any POSIX-compliant regular expression but without the following characters:
+
+
+                   ; = ' < >
+
+
+         See <http://en.wikipedia.org/wiki/Regular_expression#POSIX> for more information.
+
+
+    -d, --date DATE
+         DATE must be a string describing a date. Current year is assumed if the year part in DATE is ommited. Any time information in DATE is disregarded. Files with data between DATE midnight and next day midnight are selected.
+
+
+    -day DAY
+         Specifies a day of a month. DAY must be a positive integer, ranging between 1 and 31. Files with data start times on that day of any month and year will be selected.
+
+
+    --month MONTH
+         Specifies a month of a year. MONTH must be a positive integer, ranging between 1 and 12. Files with data start times from any day of that month for any year will be listed.
+
+
+    --year YEAR
+         Specifies a year. YEAR must be a positive integer, ranging between 1978 and current year. Files with data start times in that year will be listed.
+
+
+    --doy DOY
+         Specifies the day of the year. DOY must be an integer, ranging between 1 and 366. Files with data start times on that day of any year will be listed.
+
+
+    -a, --area AREA
+         Locate files which intersect with the specified polygon AREA. The polygon must be a regular one (closed, no self-intersection, no hole) with coordinates (longtitude, latitude) separated by ",", like "POLYGON((30.31 60.2, 31.21 60.2, 31.21 60.76, 30.31 60.76, 30.31 60.2))".
+
+
+    --satname SATNAME
+         Select files from the SATNAME satellite. Wide variety of forms for SATNAME values are supported, such as: mixed case letters, with or without a leading zero or the dash, etc. Examples: "noAA06", "NoAa-07", "noaa14", "Metopa".
+
+
+    --satid SATID
+         Select files from the satellite whose spacecraft ID is SATID, i.e.  "NL" for "NOAA-16", "TN" for "TIROS-N", "M2" or "M02" for "Metop-A". Mixed case letters are accepted.
+
+
+    -m, --metadata
+         Query the metadata files for the corresponding data files. Data type is required when using this option.
+
+
+    -stime, --start-time DATETIME
+         Files with data ending on or after DATETIME are selected. This option must be used in conjunction with the --end-time option to define a data time range.
+
+
+         DATETIME is a string specifying both a date and a time. Current year is assumed if the year cannot be inferred from the DATETIME string. If the time part is missing, the time "00:00:00" is assumed. ISO 8601 time format with time zone is strongly recommended for DATETIME values.
+
+
+    -etime, --end-time DATETIME
+         Files with data starting on or before DATETIME are selected. This option must be used in conjunction with the -stime option to define a data time range.
+
+
+         DATETIME is a string specifying both a date and a time. Current year is assumed if the year cannot be inferred from the DATETIME string. If the time part is missing, the time "00:00:00" is assumed. ISO 8601 time format with time zone is strongly recommended for DATETIME values.
+
+
+    --since DATETIME
+         Select files who are added to the repository since DATETIME.
+
+
+         DATETIME is a string specifying both a date and a time. Current year is assumed if the year cannot be inferred from the DATETIME string. If the time part is missing, the time "00:00:00" is assumed. ISO 8601 time format wiht time zone is strongly recommended for DATETIME values.
+
+
+   -b, --between 'start','end','ingest'
+
+
+          Both -stime and -etime are required when using this option. If <'start'> is specified, the files observed starting between <-stime> and <-etime> will be returned. If <'end'> is specified, the files observed ending between <-stime> and <-etime> will be returned. If <'ingest'> is specified, the files ingested between <-stime> and <-etime> will be returned.
+
+
+    -h, -?, --help
+         Show this help message.
+
+
+    --examples
+         Show examples.
+
+
+    --version
+         Display version information.
+
+
+   General rules in applying selection criteria from options:
+
+
+         1.  Logical or operation is applied between arguments of those options that are allowed multiple values.
+
+
+         2.  Logical and operation is applied between arguments of different options.
+
+
+EXIT STATUS
+    Returns zero on successful completion (some files found). In all other cases returns a non-zero with a message printed on stderr.
+
+
+Examples:
+The program supports three general types of queries:
+
+
+    1. Data availability in the repository
+    2. Find specific files
+    3. Selecting files based on the time range of their data
+
+
+What Data is Available?:
+    Information about all data collections in the repository:
+
+
+        scdr-files-go --available
+
+
+    displays collection name, description, total file size, and total number of files.
+
+
+    Comprehensive information about a data collection is obtained by specifying its name as an argument of the --available option. For example, to get information about the GHRR collection:
+
+
+        scdr-files-go --available -t GHRR
+
+
+    Using the --gap option will add detailed report about available data including adjacent data gaps. This operation may take a lof of time so be patient -- it will eventually finish. To produce data availability report for the IASI-1C collection with data gaps larger than the default value (1 day):
+
+
+        scdr-files-go --available -t IASI-1C --gap
+
+
+    The same report but with data gaps larger than 12 hours 15 minutes and 34 seconds:
+
+
+        scdr-files-go --available -t IASI-1C --gap "12 hours 15 minutes 34 seconds"
+    In order to speed up generation of such reports --start-time, --end-time, or --label options can be used to narrow down the number of files for analysis. If only one of the --start-time and --end-time options is present the other's default value is the collection's minimum or maximum data time. --label option if used in this context accepts only one value.
+
+
+        scdr-files-go --available -t IASI-1C --gap '5 minutes' --label Metop-B
+
+
+    To find out only about possible data gaps, the --gap option should be used with the --type option.
+
+
+        scdr-files-go --type SVI05 --gap '10 seconds'
+
+
+    To narrow data gap search to just a certain time range of the data:
+
+
+        scdr-files-go -t SVI05 --gap '10 seconds' --stime 2013-12-29
+
+
+    will limit the analysis to SVI05 data starting from 2013-12-29T00:00:00Z.
+
+
+Looking for Specific Files:
+    Use either file names or file SHA-1 checksum values to find specific files stored in SCDR.
+
+
+        scdr-files-go --file FILENAME1 --file FILENAME2 --sha1 CHCKSM1 --sha1 CHCKSM2
+
+
+    The above will locate all the files whose file names are *FILENAME1* or *FILENAME2*, or have SHA-1 checksums *CHCKSM1* or *CHCKSM2*.
+
+
+    Combine with the --type option to limit file search to only certain collection.
+
+
+    Use regular expression to locate files from SCDR (must be combined with temporal options), for example, GMTCO data observed on January 9, 2020:
+
+
+        scdr-filesgo -t GMTCO --re-file ^GMTCO_npp_d20200109 -d 2020-1-9
+
+
+Select files based on the temporal and spatial range of their data:
+    GHRR data for today?
+
+
+        scdr-files-go --type GHRR today
+
+
+    The same would be achieved with:
+
+
+        scdr-files-go -t GHRR -d today
+
+
+    Any command-line argument unclaimed by the options is considered to represent a date.
+
+
+    What about yesterday's HIRS data?
+
+
+        scdr-files-go -t HIRS yesterday
+
+
+    But I really need MHS data from *y* years, *m* months, *w* weeks, and *d* days ago (hours, minutes, and seconds also work):
+
+
+        scdr-files-go -t MHS "<y> years <m> months <w> weeks <d> days ago"
+
+
+    Quote date strings if any whitespace is present to prevent the shell from breaking it up.
+
+
+    All GHRR files with data on the 91st day of 2005:
+
+
+        scdr-files-go --type GHRR 2005-091
+
+
+    Note how the day of the year part must be a three-digit number. Otherwise, date parsing will fail because the string is ambiguous. To avoid any problem with parsing date and time strings, use ISO 8601 format as often as possible.
+
+
+    The same result would be achieved with any of the following:
+
+
+        scdr-files-go --type GHRR 2005-04-01
+        scdr-files-go --type GHRR 2005-4-1
+        scdr-files-go --type GHRR 4/1/2005
+        scdr-files-go --type GHRR "April 1st 2005"
+        scdr-files-go --type GHRR "April 1st 2005 at 4:30 pm"
+
+
+    In the last case, specifying time has no effect since scdr-files-go expects only a date.
+
+
+    If only data from one satellite on that day is required, limit the search with:
+
+
+        scdr-files-go --satname NOAA-16 --type HIRS 2005-091
+
+
+    to obtain only NOAA-16 HIRS files on the 91st day of 2005. Files for more than one satellite are requested by listing their names:
+
+
+        scdr-files-go -t hirs --satname NOAA-16 --satname NOAA-17 2005-091
+
+
+    Ommiting the year from the date string assumes it is the current year:
+
+
+        scdr-files-go -t amsua "1st Saturday in April"
+
+
+    will select all AMSUA files with data on the 1st Saturday in April of the current year.
+
+
+    To obtain files with file name date stamp from year 2005 and day 91:
+
+
+        scdr-files-go -doy 91 -year 2005
+
+
+        scdr-files-go -day 1 -month 4 -year 2005
+
+
+    What is the difference from "scdr-files-go ... 2005-091"? In that case one more file would be selected -- the last file from the previous day with data crossing over into the 91st day of 2005.
+
+
+    All NOAA-9 files with file name date stamps for April of any year:
+
+
+        scdr-files-go --month 4 --satname NOAA-9
+
+
+    Listing files with data for a date range:
+
+
+        scdr-files-go ... -stime "March 31st 2003 at 17:30" -etime "2003-04-01 10:32:49"
+
+
+    Time zones are allowed:
+
+
+        scdr-files-go ... -stime "March 31st 2003 at 17:30" -etime "2003-04-01 10:32:49 PST"
+
+
+        scdr-files-go ... -stime "yesterday at 9:00 am America/New_York" -etime now
+
+
+    To find the latest files ingested using -since like from 10 minutes ago (UTC time):
+
+
+        scdr-files-go -t AHI-L1B-FLDK -since "$(date -Isec -d '10 minutes ago')"
+
+
+    To locate files boundary of which intersect the area of interest:
+
+
+        scdr-files-go -t S1A-GRD --area "POLYGON((30.31 60.2, 31.21 60.2, 31.21 60.76, 30.31 60.76, 30.31 60.2))"
+
+
+    To find the metadata files of the corresponding data files:
+
+
+        scdr-files-go -t IASI-1C --metadata -d today
+
+
+Tips for Working with Output File List:
+    Output from scdr-files-go program is a list of file paths, one file per line. Very often this list can get quite big and so working with it can pose a challenge. In some cases using the command line program xargs can help. Below are tips for some frequent tasks.
+
+
+    How to copy files from Scdr?:
+      To copy files in SCDR to a local directory pipe the output of scdr-files-go to xargs which calls the cp command.
+
+
+        scdr-files-go ...options... | xargs -L100 -P2 cp -t LOCAL_DIRECTORY
+
+
+      The above command will run two cp commands in parallel with up to 100 files each until the entire output list from scdr-files-go is consumed. See "man xargs" for full details.
+
+
+    How to create symlinks to files in SCDR?
+        cd LOCAL_DIRECTORY
+        scdr-files-go ...options... | xargs -L1 ln -s
+
+
+      This is not a recommended practice because the created symlinks can at some point in time become invalid. The best practice is to use scdr-files-go directly.
+
+
+    How to check for duplicate npp data?
+      The command below will list the count of all repeating granules for one NPP data product with data on a given day:
+
+
+        scdr-files-go -t DATATYPE YYYY-MM-DD | cut -d\/ -f 5 | cut -d_ -f1-6 | sort | uniq -c | awk '$1 > 1'
