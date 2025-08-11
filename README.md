@@ -1,4 +1,4 @@
-scdr-gemini-assistant
+# scdr-gemini-assistant
 
 The SCDR Gemini Assistant is a Python-based tool that converts plain English instructions into valid scdr-files-go commands. It was created to make working with NOAA’s SCDR satellite data faster and easier — no more memorizing complex command syntax.
 
@@ -6,7 +6,7 @@ Simply tell the assistant what data you want, and it will output the exact scdr-
 
 ⸻
 
-Included Files
+# Included Files
 
 Main Script
 	•	scdr_gemini.py — Processes natural language prompts and generates commands.
@@ -26,7 +26,7 @@ Requirements
 
 ⸻
 Setup
-	1.	Download the repository
+	#1.	Download the repository
  
  git clone https://github.com/<your-username>/scdr-gemini-assistant.git
  cd scdr-gemini-assistant
@@ -35,7 +35,8 @@ Or download the ZIP from GitHub and unzip it.
 
 ⸻
 
-	2.	(Optional) Create a virtual environment
+2. (Optional) Create a virtual environment
+
 python -m venv .venv
 # macOS/Linux:
 source .venv/bin/activate
@@ -44,7 +45,7 @@ source .venv/bin/activate
 
 ⸻
 
- 3.	Install dependencies
+ # 3.	Install dependencies
  pip install -r requirements.txt
 
 ⸻
@@ -58,7 +59,7 @@ export GEMINI_API_KEY=your_key_here
 
 ⸻
 
-How to Run:
+# How to Run:
 
 Example 1 — Get MTG FCI data for a date range
 
@@ -67,7 +68,7 @@ OUTPUT: scdr-files-go -t MTG-FCI-L1C --start-time "2024-06-01T00:00:00" --end-ti
 
 ⸻
 
-Troubleshooting
+# Troubleshooting
 	•	FileNotFoundError → Ensure all .txt files are in the same folder as scdr_gemini.py.
 	•	ModuleNotFoundError: dotenv → Run pip install python-dotenv.
 	•	API key not found → Make sure .env exists and contains GEMINI_API_KEY=your_key_here.
