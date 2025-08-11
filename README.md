@@ -50,12 +50,22 @@ source .venv/bin/activate
 
 ⸻
 
-5.	(Optional) Set your Gemini API key
-	•	Create a .env file in the same folder as scdr_gemini.py:
-GEMINI_API_KEY=your_key_here
+### Set Your Gemini API Key
 
-•	Or set it in your terminal:
+To use the Gemini API, you first need to create an API key in **Google AI Studio**.  
+Follow the official instructions here: https://ai.google.dev/gemini-api/docs/api-key
+
+Once you have your key:
+
+- **Option 1 (Recommended):** Create a `.env` file in the same folder as `scdr_gemini.py`:
+  
+- **Option 2:** Set it directly in your terminal session:  
+```bash
+# macOS/Linux
 export GEMINI_API_KEY=your_key_here
+
+# Windows PowerShell
+setx GEMINI_API_KEY "your_key_here"
 
 ⸻
 
