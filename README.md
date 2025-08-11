@@ -61,6 +61,9 @@ export GEMINI_API_KEY=your_key_here
 
 # How to Run:
 
+You give your natural language prompt **in the terminal** when running the script. 
+Type it after `python scdr_gemini.py`, inside quotation marks.
+
 Example 1 — Get MTG FCI data for a date range
 
 INPUT: python scdr_gemini.py "Give me the scdr-files command for extracting MTG FCI data for June 1 to June 10, 2024"
