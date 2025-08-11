@@ -1,6 +1,6 @@
 # scdr-gemini-assistant
 
-The SCDR Gemini Assistant is a Python-based tool that converts plain English instructions into valid scdr-files-go commands. It was created to make working with NOAA’s SCDR satellite data faster and easier — no more memorizing complex command syntax.
+The SCDR Gemini Assistant is a Python-based tool that converts plain English instructions into valid scdr-files-go commands. It has been created to generate commands that can help communicate with scdr data base at NOAA
 
 Simply tell the assistant what data you want, and it will output the exact scdr-files-go command you need. You can then copy that command into your terminal or integrate it directly into your workflow.
 
